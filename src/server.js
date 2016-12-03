@@ -97,8 +97,6 @@ if (process.env.NODE_ENV !== 'production') {
 //
 // Register API middleware
 // -----------------------------------------------------------------------------
-const schema = makeExecutableSchema({ typeDefs, resolvers });
-
 app.use('/graphql', bodyParser.json(), apolloExpress({ schema }));
 
 if (process.env.NODE_ENV !== 'production') {
