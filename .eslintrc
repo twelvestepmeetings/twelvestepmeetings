@@ -25,8 +25,8 @@
   },
   "rules": {
     "indent": [2, 2, {"SwitchCase": 1}],
-    "react/jsx-indent": [1, 4],
-    "react/jsx-indent-props": [1, 4],
+    "react/jsx-indent": [1, 2],
+    "react/jsx-indent-props": [1, 2],
     "semi": [1, "always"],
     "strict": [2, "global"],
     "no-use-before-define": 0,
@@ -132,7 +132,9 @@
     }],
     "import/no-extraneous-dependencies": [0],
     "import/extensions": [0],
-    "react/prop-types": [1]
+    "react/prop-types": [1],
+    "react/jsx-uses-vars": 1,
+    "react/jsx-uses-react": 1
   },
   "globals": {
     "toastr": false

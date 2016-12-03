@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 import 'babel-polyfill';
 import path from 'path';
 import express from 'express';
@@ -11,7 +12,6 @@ import jwt from 'jsonwebtoken';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import PrettyError from 'pretty-error';
-import App from './components/App';
 import Html from './components/Html';
 import passport from './core/passport';
 import typeDefs from './data/schema';
@@ -111,11 +111,11 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
     <Html
       title="Internal Server Error"
       description={err.message}
-      style={errorPageStyle._getCss()} // eslint-disable-line no-underscore-dangle
     >
       {ReactDOM.renderToString(<ErrorPageWithoutStyle error={err} />)}
-    </Html>,
+    </Html>
   );
+
   res.status(err.status || 500);
   res.send(`<!doctype html>${html}`);
 });
@@ -125,8 +125,8 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 // models.sync().catch(err => console.error(err.stack)).then(() => {
-  app.listen(port, () => {
-    console.log(`The server is running at http://localhost:${port}/`);
-  });
+app.listen(port, () => {
+  console.log(`The server is running at http://localhost:${port}/`);
+});
 // });
 /* eslint-enable no-console */

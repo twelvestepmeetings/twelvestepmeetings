@@ -3,8 +3,8 @@ import { analytics } from '../config';
 
 class Html extends React.Component {
   static propTypes = {
-    title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    description: PropTypes.string,
     style: PropTypes.string,
     scripts: PropTypes.arrayOf(PropTypes.string.isRequired),
     children: PropTypes.string,
