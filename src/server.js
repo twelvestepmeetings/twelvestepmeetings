@@ -7,18 +7,50 @@ import bodyParser from 'body-parser';
 import expressJwt from 'express-jwt';
 // import expressGraphQL from 'express-graphql';
 import { apolloExpress, graphiqlExpress } from 'apollo-server';
-import { makeExecutableSchema } from 'graphql-tools';
 import jwt from 'jsonwebtoken';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import PrettyError from 'pretty-error';
+import mongoose from 'mongoose';
 import Html from './components/Html';
 import passport from './core/passport';
-import typeDefs from './data/schema';
-import resolvers from './data/resolvers';
+import schema from './schema';
 import assets from './assets'; // eslint-disable-line import/no-unresolved
 import { port, auth } from './config';
 
+/**
+ * Initialize the database
+ */
+mongoose.connect('mongodb://localhost:27017/twelvestepmeetings');
+// var Cat = mongoose.model('Cat', { name: String });
+//
+// var kitty = new Cat({ name: 'Zildjian' });
+// kitty.save(function (err) {
+//   if (err) {
+//     console.log(err);
+//   } else {
+//     console.log('meow');
+//   }
+// });
+
+ function insertDocuments(db, callback) {
+   // Get the documents collection
+   var collection = db.collection('documents');
+   // Insert some documents
+   collection.insertMany([
+     {a : 1}, {a : 2}, {a : 3}
+   ], function(err, result) {
+     assert.equal(err, null);
+     assert.equal(3, result.result.n);
+     assert.equal(3, result.ops.length);
+     console.log("Inserted 3 documents into the collection");
+     callback(result);
+   });
+ }
+
+/**
+ * Initialize the node app.
+ */
 const app = express();
 
 //
