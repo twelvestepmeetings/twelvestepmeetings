@@ -22,31 +22,6 @@ import { port, auth } from './config';
  * Initialize the database
  */
 mongoose.connect('mongodb://localhost:27017/twelvestepmeetings');
-// var Cat = mongoose.model('Cat', { name: String });
-//
-// var kitty = new Cat({ name: 'Zildjian' });
-// kitty.save(function (err) {
-//   if (err) {
-//     console.log(err);
-//   } else {
-//     console.log('meow');
-//   }
-// });
-
- function insertDocuments(db, callback) {
-   // Get the documents collection
-   var collection = db.collection('documents');
-   // Insert some documents
-   collection.insertMany([
-     {a : 1}, {a : 2}, {a : 3}
-   ], function(err, result) {
-     assert.equal(err, null);
-     assert.equal(3, result.result.n);
-     assert.equal(3, result.ops.length);
-     console.log("Inserted 3 documents into the collection");
-     callback(result);
-   });
- }
 
 /**
  * Initialize the node app.
