@@ -40,7 +40,7 @@ onLocationChange(currentLocation);
  * Enable Hot Module Replacement (HMR)
  */
 if (module.hot) {
-  module.hot.accept('./components', () => {
+  module.hot.accept('./components/App', () => {
 
     if (appInstance) {
       try {

@@ -86,9 +86,7 @@
     "one-var": [1, "never"],
     "operator-assignment": [1, "never"],
     "operator-linebreak": [1, "after"],
-    "quote-props": [1, "consistent-as-needed", {
-      "keywords": true
-    }],
+    "quote-props": 0,
     "quotes": [1, "single", "avoid-escape"],
     "keyword-spacing": [1, {
       "before": true,
