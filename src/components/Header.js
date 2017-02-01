@@ -91,6 +91,8 @@ class Header extends React.Component {
     const styles = reactCSS(stylesheet, {
       'mobile': isMobile
     });
+    if(this.props.color) styles.container.backgroundColor = this.props.color;
+
     const btnClose = (
       <i
         className="material-icons"
