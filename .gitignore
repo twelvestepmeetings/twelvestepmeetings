@@ -1,5 +1,7 @@
-build
-database.sqlite
-node_modules
-ncp-debug.log
+node_modules/
+public/bundle.js
+public/bundle.js.map
+server.js
+server.js.map
+.env
 npm-debug.log

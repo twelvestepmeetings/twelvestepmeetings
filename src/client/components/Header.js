@@ -1,7 +1,7 @@
 import React from 'react';
 import reactCSS from 'reactcss';
 import bounds from 'react-bounds';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import Logo from './Logo';
 import LanguageSelector from './LanguageSelector';
 

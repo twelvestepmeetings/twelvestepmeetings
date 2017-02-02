@@ -8,6 +8,11 @@ mongod
 In terminal #2:
 ```
 npm install
+npm run dev
+```
+
+In terminal #3:
+```
 npm start
 ```
 
