@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import reactCSS from 'reactcss';
 import bounds from 'react-bounds';
 import { Link } from 'react-router-dom';
@@ -71,6 +71,19 @@ const stylesheet = {
 
 class Header extends React.Component {
 
+  static propTypes = {
+    style: PropTypes.object, // eslint-disable-line
+    isBound: PropTypes.func
+  };
+
+  static bounds() {
+    return {
+      mobile: {
+        maxWidth: 800
+      }
+    };
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -78,18 +91,10 @@ class Header extends React.Component {
     };
   }
 
-  static bounds() {
-    return {
-      'mobile': {
-        maxWidth: 800
-      }
-    };
-  }
-
   render() {
     const isMobile = this.props.isBound('mobile');
     const styles = reactCSS(stylesheet, {
-      'mobile': isMobile
+      mobile: isMobile
     });
     const btnClose = (
       <i
@@ -128,7 +133,7 @@ class Header extends React.Component {
     );
 
     return (
-      <div style={styles.container}>
+      <div style={{ ...styles.container, ...this.props.style }}>
         <div style={styles.logo}>
           <Logo style={styles.logo} />
         </div>
