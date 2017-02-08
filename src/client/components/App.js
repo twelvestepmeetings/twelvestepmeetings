@@ -2,19 +2,19 @@ import React from 'react';
 import {
   BrowserRouter as Router,
   Route,
-  Link,
   Switch
-} from 'react-router-dom'
+} from 'react-router-dom';
 import Home from './Home';
 import NotFound from './NotFound';
+import Meetings from './Meetings';
 
 const App = () => (
   <Router>
     <div>
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route component={NotFound} />
         <Route exact path="/meetings" component={Meetings} />
+        <Route component={NotFound} />
       </Switch>
     </div>
   </Router>

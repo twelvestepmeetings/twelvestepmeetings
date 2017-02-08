@@ -16,29 +16,33 @@ const stylesheet = {
       backgroundColor: 'hsl(225, 8%, 19%)'
     },
     titleBar: {
-      width: '1000px',
       margin: '0 auto',
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      color: '#757575'
+      padding: '0 15px',
+      background: 'hsl(0,0%,98%)'
+    },
+    title: {
+      color: 'hsl(0, 0%, 20%)',
+      fontSize: '25px',
+      fontWeight: '300',
+      margin: '15px 0'
     },
     grey: {
-      background: '#f2f2f2',
-      borderBottom: '1px solid #e5e5e5'
-    },
-    lightGrey: {
-      background: '#fcfcfc'
+      background: 'hsl(0,0%,100%)',
+      border: '1px solid hsl(0,0%,93%)',
+      borderRight: 'none',
+      borderLeft: 'none'
     },
     tabs: {
-      width: '640px',
       margin: '0 auto',
       display: 'flex',
-      justifyContent: 'space-between',
+      justifyContent: 'space-around',
       alignItems: 'center',
-      fontSize: '20px',
-      padding: '20px 0',
-      fontWeight: 500
+      fontSize: '14px',
+      padding: '12px 0',
+      fontWeight: 400
     },
     tab: {
       color: 'hsl(0, 0%, 70%)',
@@ -49,45 +53,64 @@ const stylesheet = {
       cursor: 'pointer'
     },
     classesHeader: {
-      width: '640px',
-      margin: '0 152px',
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      color: '#2f2f2f',
-      fontWeight: 'bold',
-      textAlign: 'center'
+      color: 'hsl(0, 0%, 30%)',
+      fontWeight: 500,
+      textAlign: 'left',
+      fontSize: '14px',
+      padding: '20px 0 10px 0',
+      fontFamily: 'Montserrat'
     },
     classesWrapper: {
-      width: '1000px',
       margin: '0 auto'
     },
     classesListItem: {
       display: 'flex',
-      textAlign: 'center',
+      textAlign: 'left',
       background: 'white',
-      border: '1px solid #f7f7f7'
+      borderBottom: '1px solid #f7f7f7',
+      alignItems: 'center',
+      padding: '10px 0'
     },
     ul: {
-      margin:'0',
-      padding:'0'
+      margin: '0',
+      padding: '0',
+      alignItems: 'center'
     },
     joinButton: {
-      background: '#53bf81',
-      color: 'white',
+      background: 'hsl(146, 46%, 54%)',
+      color: 'hsl(0, 0%, 100%)',
       textDecoration: 'none',
       borderRadius: '25px',
-      padding: '5px 50px',
-      lineHeight: '53px'
+      padding: '5px 30px',
+      lineHeight: '53px',
+      display: 'flex',
+      height: '30px',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '100px',
+      outline: 'none',
+      marginRight: '10px'
     },
     liveButton: {
       border: '1px solid #53bf81',
       color: '#53bf81',
       width: '58px',
-      fontSize: '14px',
+      fontSize: '12px',
       margin: '0 auto',
       borderRadius: '25px',
-      padding: '0px 10px'
+      padding: '0px 10px',
+      textAlign: 'center'
+    },
+    cell: {
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      fontSize: '13px',
+      color: 'hsl(0, 0%, 35%)',
+      fontWeight: 400
     }
   }
 };
@@ -113,27 +136,23 @@ class Meetings extends React.Component {
 
   render() {
     const { subview } = this.state;
+    const meetings = getMeetings();
     const styles = reactCSS(stylesheet, {
-      'mobile': this.props.isBound('mobile')
+      mobile: this.props.isBound('mobile')
     });
     const titlebar = (
-      <div>
-        <Header style={styles.header} />
-        <div style={styles.grey}>
-          <div style={styles.titleBar}>
-            <h2>Online Meetings</h2>
-            <div>Filter</div>
-          </div>
-        </div>
+      <div style={styles.titleBar}>
+        <h2 style={styles.title}>Online Meetings</h2>
+        <div>Filter</div>
       </div>
     );
 
     const tabs = (
       <div style={styles.grey}>
         <div style={styles.tabs}>
-          { days.map(day =>
+          {days.map(day =>
             <TabOption
-              key={key += 1}
+              key={day}
               day={day}
               onClick={() => this.setState({ subview: day })}
               style={subview === day ? styles.activeTab : styles.tab}
@@ -142,41 +161,46 @@ class Meetings extends React.Component {
         </div>
       </div>
     );
-
-    const classeslist = (
-      <div style={styles.lightGrey}>
-        <div style={{ width: '1000px', margin: '0 auto'}}>
-          <div style={styles.classesHeader}>
-            <p style={{ flex: '1', textAlign: 'justify' }}>FELLOWSHIP</p>
-            <p style={{ flex: '0.5' }}>TIME</p>
-            <p style={{ flex: '1' }}>MEETING TOPIC</p>
-            <p style={{ flex: '0.5' }}>GROUP</p>
+    const header = (
+      <div style={styles.classesHeader}>
+        <div style={{ flex: '0.5' }} />
+        <div style={{ flex: 0.5 }}>FELLOWSHIP</div>
+        <div style={{ flex: '0.5' }}>TIME</div>
+        <div style={{ flex: '1' }}>MEETING TOPIC</div>
+        <div style={{ flex: '0.5' }}>GROUP</div>
+        <div style={{ flex: 0.5 }} />
+      </div>
+    );
+    const body = (
+      <div style={styles.classesWrapper}>
+        {meetings.map(meeting =>
+          <div style={styles.classesListItem} key={meeting.id}>
+            <div style={{ flex: '0.5', display: 'flex', alignItems: 'center' }}>
+              {meeting.live && <div style={styles.liveButton}>LIVE</div>}
+            </div>
+            <div style={{ ...styles.cell, flex: 0.5 }}>{meeting.fellowship}</div>
+            <div style={{ ...styles.cell, flex: 0.5 }}>
+              {moment(meeting.time).format('hh:mm A')}
+            </div>
+            <div style={{ ...styles.cell, flex: 1 }}>{meeting.topic}</div>
+            <div style={{ ...styles.cell, flex: 0.5 }}>
+              {meeting.tags.join(', ')}
+            </div>
+            <div style={{ ...styles.cell, flex: 0.5 }}>
+              <a style={styles.joinButton} href="#">JOIN</a>
+            </div>
           </div>
-        </div>
-        <div style={styles.classesWrapper}>
-          <ul style={styles.ul}>
-            <li style={styles.classesListItem}>
-              <div style={{ flex: '1.4', display: 'flex', alignItems: 'center' }}>
-                <p style={styles.liveButton}>LIVE</p>
-              </div>
-              <p style={{ flex: '3.4' }}>Alcoholics Anonymous</p>
-              <p style={{ flex: '1.4' }}>08:00</p>
-              <p style={{ flex: '2.8' }}>A Higher Power</p>
-              <p style={{ flex: '1.4' }}>Youth</p>
-              <div style={{ flex: '2.8' }}>
-                <a style={styles.joinButton} href="#">JOIN</a>
-              </div>
-            </li>
-          </ul>
-        </div>
+        )}
       </div>
     );
 
     return (
       <div style={styles.container}>
+        <Header style={styles.header} />
         {titlebar}
         {tabs}
-        {classeslist}
+        {header}
+        {body}
       </div>
     );
   }
@@ -205,7 +229,7 @@ function getMeetings() { // eslint-disable-line
       id: 2,
       live: true,
       fellowship: 'AA',
-      topic: 'Higher power',
+      topic: 'Alcoholism in the workplace',
       time: moment().hour(13).minute(0).second(0).toDate(),
       tags: ['youth']
     },
@@ -213,7 +237,7 @@ function getMeetings() { // eslint-disable-line
       id: 3,
       live: false,
       fellowship: 'NA',
-      topic: 'Higher power',
+      topic: 'Sandy B Shares His Story',
       time: moment().hour(19).minute(0).second(0).toDate(),
       tags: ['youth']
     },
@@ -221,7 +245,7 @@ function getMeetings() { // eslint-disable-line
       id: 4,
       live: false,
       fellowship: 'AA',
-      topic: 'Higher power',
+      topic: 'Women of AA',
       time: moment().hour(19).minute(0).second(0).toDate(),
       tags: ['youth']
     }

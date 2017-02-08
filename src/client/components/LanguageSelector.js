@@ -5,16 +5,17 @@ const styles = reactCSS({
   'default': {
     container: {
       position: 'relative',
-      border: '2px solid hsl(0, 0%, 100%)',
+      border: '1px solid hsl(0, 0%, 100%)',
       marginLeft: '35px',
       marginRight: '15px',
-      padding: '6px 18px 6px 27px',
+      padding: '1px 10px 1px 22px',
       borderRadius: '27px',
       color: 'hsl(0, 0%, 100%)',
       display: 'flex',
       alignItems: 'center',
       cursor: 'pointer',
-      textTransform: 'uppercase'
+      textTransform: 'uppercase',
+      fontSize: '12px'
     },
     dropdown: {
       position: 'absolute',

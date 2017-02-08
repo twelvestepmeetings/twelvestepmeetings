@@ -12,7 +12,7 @@ const stylesheet = {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: '20px 15px'
+      padding: '10px 15px'
     },
     logo: {
       height: '30px',

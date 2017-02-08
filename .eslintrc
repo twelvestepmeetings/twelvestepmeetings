@@ -110,8 +110,9 @@
     }],
     "max-len": [1, {
       "code": 100,
-      "tabWidth": 4,
-      "ignoreUrls": true
+      "tabWidth": 2,
+      "ignoreUrls": true,
+      "ignoreStrings": true
     }],
     "max-lines": ["error", {
       "max": 200,
