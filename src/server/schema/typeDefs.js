@@ -1,12 +1,15 @@
-/**
- * Main GraphQL Type definitions
- */
-
+/* eslint-disable */
 export default /* GraphQL */`
 
 type User {
   _id: ID!
   name: String
+}
+
+enum Fellowship {
+  AA
+  NA
+  CA
 }
 
 type Meeting {
@@ -15,7 +18,10 @@ type Meeting {
   speaker: User # User who is 'sharing'
   leader: User # User with admin privileges
   live: Boolean # Is the meeting in session?
-  startsAt: Int! # When does the meeting start?
+  fellowship: Fellowship
+  topic: String
+  time: Int! # When does the meeting start?
+  tags: [String!]
 }
 
 type Query {
@@ -26,7 +32,10 @@ type Query {
 type Mutation {
   createMeeting (
     leaderId: ID!
-    startsAt: Int
+    time: Int
+    fellowship: String!
+    topic: String
+    tags: [String!]
   ) : Meeting
   startMeeting (
     _id: String!

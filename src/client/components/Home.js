@@ -4,7 +4,7 @@ import bounds from 'react-bounds';
 import moment from 'moment';
 import Header from './Header';
 import Dropdown from './Dropdown';
-import Meeting from './Meeting';
+import Meeting from './HomeMeeting';
 
 const MEETINGS = 'MEETINGS';
 const SPEAKERTAPES = 'SPEAKERTAPES';

@@ -1,21 +1,19 @@
 import React from 'react';
-import reactCSS from 'reactcss';
+import style from 'lib/style';
 
 const stylesheet = {
-  'default': {
-    container: {
 
-    }
-  }
 };
-const styles = reactCSS(stylesheet);
 
-export const TabOption = (props) => {
+
+const TabOption = (props) => {
   return (
-    <div style={styles.container}>
+    <div>
       <a style={props.style} onClick={props.onClick}>
         {props.day}
       </a>
     </div>
   )
 };
+
+export default style(stylesheet)(TabOption);

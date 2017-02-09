@@ -1,17 +1,171 @@
 import React, { PropTypes } from 'react';
-import reactCSS from 'reactcss';
 import bounds from 'react-bounds';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 import Header from './../Header';
 import Dropdown from './../Dropdown';
 import Meeting from './../Meeting';
 import { TabOption } from './TabOption';
+import style from 'lib/style';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
 
 const TUE = 'TUE', WED = 'WED', THUR = 'THUR', FRI = 'FRI', SAT = 'SAT', SUN = 'SUN';
 const days = [ TUE, WED, THUR, FRI, SAT, SUN];
-let key = 1;
-const stylesheet = {
-  'default': {
+
+const ACTIONS = gql`
+mutation createMeeting (
+  $leaderId: ID!
+  $time: Int
+  $fellowship: String!
+  $topic: String
+  $tags: [String!]
+) {
+  createMeeting(
+    leaderId: $leaderId
+    time: $time
+    fellowship: $fellowship
+    topic: $topic
+    tags: $tags
+  ) {
+    _id
+    topic
+    time
+    live
+    fellowship
+    tags
+  }
+}
+`;
+
+const QUERY = gql`
+query {
+  meetings {
+    _id
+    live
+    fellowship
+    topic
+    time
+    tags
+  }
+}
+`;
+const mapDataToProps = result => ({
+  meetings: result.data.meetings,
+  isFetching: result.data.loading
+});
+const withData = graphql(QUERY, {
+  props: mapDataToProps
+});
+
+const propTypes = {
+
+  /**
+   * Provided by react-bounds
+   */
+  isBound: PropTypes.func.isRequired
+};
+
+@withData
+@style(stylesheet())
+class Meetings extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      sliderIndex: 0,
+      subview: TUE,
+      selectedFellowship: 0
+    };
+  }
+
+  render() {
+    const { classes, meetings, isFetching, match } = this.props;
+    if (isFetching) return <div>Loading...</div>;
+    const { subview } = this.state;
+    const isMobile = this.props.isBound('mobile');
+    const titlebar = (
+      <div className={classes.titleBar}>
+        <h2 className={classes.title}>Online Meetings</h2>
+        <div>Filter</div>
+      </div>
+    );
+    const tabs = (
+      <div className={classes.grey}>
+        <div className={classes.tabs}>
+          {days.map(day =>
+            <a
+              key={day}
+              onClick={() => this.setState({ subview: day })}
+              className={subview === day ? classes.activeTab : classes.tab}
+            >{day}</a>
+          )}
+        </div>
+      </div>
+    );
+    const header = (
+      <div className={classes.classesHeader}>
+        <div style={{ flex: '0.5' }} />
+        <div style={{ flex: 0.5 }}>FELLOWSHIP</div>
+        <div style={{ flex: '0.5' }}>TIME</div>
+        <div style={{ flex: '1' }}>MEETING TOPIC</div>
+        <div style={{ flex: '0.5' }}>GROUP</div>
+        <div style={{ flex: 0.5 }} />
+      </div>
+    );
+    const body = (
+      <div className={classes.classesWrapper}>
+        {meetings.map(meeting =>
+          <div className={classes.classesListItem} key={meeting._id}>
+            <div style={{ flex: '0.5', display: 'flex', alignItems: 'center' }}>
+              {meeting.live && <div className={classes.liveButton}>LIVE</div>}
+            </div>
+            <div className={classes.cell} style={{ flex: 0.5 }}>
+              {meeting.fellowship}
+            </div>
+            <div className={classes.cell} style={{ flex: 0.5 }}>
+              {moment(meeting.time).format('hh:mm A')}
+            </div>
+            <div className={classes.cell} style={{ flex: 1 }}>
+              {meeting.topic}
+            </div>
+            <div className={classes.cell} style={{ flex: 0.5 }}>
+              {meeting.tags.join(', ')}
+            </div>
+            <div className={classes.cell} style={{ flex: 0.5 }}>
+              <Link
+                className={classes.joinButton}
+                to={`${match.url}/${meeting._id}`}
+              >JOIN</Link>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+
+    return (
+      <div className={classes.container}>
+        <Header className={classes.header} />
+        {titlebar}
+        {tabs}
+        {header}
+        {body}
+      </div>
+    );
+  }
+}
+
+Meetings.bounds = () => ({
+  'mobile': {
+    maxWidth: 800
+  }
+});
+
+Meetings.propTypes = propTypes;
+
+
+function stylesheet() {
+  return {
     header: {
       backgroundColor: 'hsl(225, 8%, 19%)'
     },
@@ -112,146 +266,7 @@ const stylesheet = {
       color: 'hsl(0, 0%, 35%)',
       fontWeight: 400
     }
-  }
-};
-
-const propTypes = {
-
-  /**
-   * Provided by react-bounds
-   */
-  isBound: PropTypes.func.isRequired
-};
-
-class Meetings extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      sliderIndex: 0,
-      subview: TUE,
-      selectedFellowship: 0
-    };
-  }
-
-  render() {
-    const { subview } = this.state;
-    const meetings = getMeetings();
-    const styles = reactCSS(stylesheet, {
-      mobile: this.props.isBound('mobile')
-    });
-    const titlebar = (
-      <div style={styles.titleBar}>
-        <h2 style={styles.title}>Online Meetings</h2>
-        <div>Filter</div>
-      </div>
-    );
-
-    const tabs = (
-      <div style={styles.grey}>
-        <div style={styles.tabs}>
-          {days.map(day =>
-            <TabOption
-              key={day}
-              day={day}
-              onClick={() => this.setState({ subview: day })}
-              style={subview === day ? styles.activeTab : styles.tab}
-            />
-          )}
-        </div>
-      </div>
-    );
-    const header = (
-      <div style={styles.classesHeader}>
-        <div style={{ flex: '0.5' }} />
-        <div style={{ flex: 0.5 }}>FELLOWSHIP</div>
-        <div style={{ flex: '0.5' }}>TIME</div>
-        <div style={{ flex: '1' }}>MEETING TOPIC</div>
-        <div style={{ flex: '0.5' }}>GROUP</div>
-        <div style={{ flex: 0.5 }} />
-      </div>
-    );
-    const body = (
-      <div style={styles.classesWrapper}>
-        {meetings.map(meeting =>
-          <div style={styles.classesListItem} key={meeting.id}>
-            <div style={{ flex: '0.5', display: 'flex', alignItems: 'center' }}>
-              {meeting.live && <div style={styles.liveButton}>LIVE</div>}
-            </div>
-            <div style={{ ...styles.cell, flex: 0.5 }}>{meeting.fellowship}</div>
-            <div style={{ ...styles.cell, flex: 0.5 }}>
-              {moment(meeting.time).format('hh:mm A')}
-            </div>
-            <div style={{ ...styles.cell, flex: 1 }}>{meeting.topic}</div>
-            <div style={{ ...styles.cell, flex: 0.5 }}>
-              {meeting.tags.join(', ')}
-            </div>
-            <div style={{ ...styles.cell, flex: 0.5 }}>
-              <a style={styles.joinButton} href="#">JOIN</a>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-
-    return (
-      <div style={styles.container}>
-        <Header style={styles.header} />
-        {titlebar}
-        {tabs}
-        {header}
-        {body}
-      </div>
-    );
-  }
-}
-
-Meetings.bounds = () => ({
-  'mobile': {
-    maxWidth: 800
-  }
-});
-
-Meetings.propTypes = propTypes;
-
-function getMeetings() { // eslint-disable-line
-  /* eslint-disable no-magic-numbers, lines-around-comment */
-  const meetings = [
-    {
-      id: 1,
-      live: true,
-      fellowship: 'AA',
-      topic: 'Higher power',
-      time: moment().hour(19).minute(0).second(0).toDate(),
-      tags: ['youth']
-    },
-    {
-      id: 2,
-      live: true,
-      fellowship: 'AA',
-      topic: 'Alcoholism in the workplace',
-      time: moment().hour(13).minute(0).second(0).toDate(),
-      tags: ['youth']
-    },
-    {
-      id: 3,
-      live: false,
-      fellowship: 'NA',
-      topic: 'Sandy B Shares His Story',
-      time: moment().hour(19).minute(0).second(0).toDate(),
-      tags: ['youth']
-    },
-    {
-      id: 4,
-      live: false,
-      fellowship: 'AA',
-      topic: 'Women of AA',
-      time: moment().hour(19).minute(0).second(0).toDate(),
-      tags: ['youth']
-    }
-  ];
-
-  return meetings;
+  };
 }
 
 export default bounds.wrap(Meetings);

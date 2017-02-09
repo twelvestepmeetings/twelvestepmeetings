@@ -94,7 +94,7 @@ const propTypes = {
   tags: PropTypes.array
 };
 
-function Meeting(props) {
+function HomeMeeting(props) {
   const styles = reactCSS(stylesheet, props);
   const live = <div style={styles.live}>LIVE</div>;
 
@@ -144,6 +144,6 @@ function Meeting(props) {
   );
 }
 
-Meeting.propTypes = propTypes;
+HomeMeeting.propTypes = propTypes;
 
-export default Meeting;
+export default HomeMeeting;
