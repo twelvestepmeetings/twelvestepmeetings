@@ -1,13 +1,100 @@
 import React, { PropTypes } from 'react';
-import bounds from 'react-bounds';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import style from 'lib/style';
 import classnames from 'classnames';
+import Measure from 'react-measure';
 import Logo from './Logo';
 import LanguageSelector from './LanguageSelector';
+import HeaderLink from './HeaderLink';
 
-const stylesheet = {
+type Props = {
+  match: {
+    path: string
+  }
+}
+
+@withRouter
+class Header extends React.Component {
+
+  props: Props;
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false,
+      dimensions: {
+        width: -1,
+        height: -1
+      }
+    };
+  }
+
+  render() {
+    const MAX_MOBILE_WIDTH = 800;
+    const { width } = this.state.dimensions;
+    const { match: { path }, classes } = this.props;
+    const isMobile = width < MAX_MOBILE_WIDTH;
+    const btnClose = (
+      <i
+        className={classnames('material-icons', classes.close)}
+        onClick={() => this.setState({ open: false })}
+      >close</i>
+    );
+    const links = [
+      { to: '/meetings', title: 'Online Meetings' },
+      { to: '/tapes', title: 'Speakertapes' },
+      { to: '/service-opportunities', title: 'Service Opportunities' }
+    ];
+    const nav = (
+      <div
+        className={classnames(classes.links, isMobile && classes.mobileLinks)}
+      >
+        {links.map(link =>
+          <HeaderLink
+            key={link.to}
+            to={link.to}
+            active={path === link.to}
+            mobile={isMobile}
+          >
+            {link.title}
+          </HeaderLink>
+        )}
+        <LanguageSelector />
+        {isMobile && btnClose}
+      </div>
+    );
+    const hamburger = (
+      <i
+        className={classnames('material-icons', classes.hamburger)}
+        onClick={() => this.setState({ open: true })}
+      >menu</i>
+    );
+
+    return (
+      <Measure
+        onMeasure={dimensions => this.setState({ dimensions })}
+      >
+        <div
+          className={classnames(classes.container, this.props.className)}
+        >
+          <Link to="/">
+            <Logo
+              className={classnames(classes.logo, {
+                [classes.mobileLogo]: isMobile
+              })}
+            />
+          </Link>
+          {!isMobile && nav}
+          {isMobile && hamburger}
+          {isMobile && this.state.open && nav}
+        </div>
+      </Measure>
+    );
+  }
+}
+
+export default style({
   container: {
     width: '100%',
     display: 'flex',
@@ -68,102 +155,4 @@ const stylesheet = {
     fontSize: '20px',
     margin: '20px 0'
   }
-};
-
-@withRouter
-@style(stylesheet)
-@bounds.wrap
-class Header extends React.Component {
-
-  static propTypes = {
-    match: PropTypes.shape({
-      pathname: PropTypes.string
-    })
-  };
-
-  static bounds() {
-    return {
-      mobile: {
-        maxWidth: 800
-      }
-    };
-  }
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false
-    };
-  }
-
-  render() {
-    const { match: { path }, classes} = this.props;
-    const isMobile = this.props.isBound('mobile');
-    const btnClose = (
-      <i
-        className={classnames('material-icons', classes.close)}
-        onClick={() => this.setState({ open: false })}
-      >close</i>
-    );
-
-    const nav = (
-      <div
-        className={classnames(classes.links, {
-          [classes.mobileLinks]: isMobile
-        })}
-      >
-        <Link
-          to="/meetings"
-          className={classnames(
-            classes.link,
-            path === '/meetings' && classes.activeLink,
-            { [classes.mobileLink]: isMobile }
-            )}
-        >Online Meetings</Link>
-        <Link
-          to="/tapes"
-          className={classnames(
-            classes.link,
-            path === '/tapes' && classes.activeLink,
-            { [classes.mobileLink]: isMobile }
-          )}
-        >Speakertapes</Link>
-        <Link
-          to="/service-opportunities"
-          className={classnames(
-            classes.link,
-            path === '/service-opportunities' && classes.activeLink,
-            { [classes.mobileLink]: isMobile }
-          )}
-        >Service Opportunities</Link>
-        <LanguageSelector />
-        {isMobile && btnClose}
-      </div>
-    );
-    const hamburger = (
-      <i
-        className={classnames('material-icons', classes.hamburger)}
-        onClick={() => this.setState({ open: true })}
-      >menu</i>
-    );
-
-    return (
-      <div
-        className={classnames(classes.container, this.props.className)}
-      >
-        <Link to="/">
-          <Logo
-            className={classnames(classes.logo, {
-              [classes.mobileLogo]: isMobile
-            })}
-          />
-        </Link>
-        {!isMobile && nav}
-        {isMobile && hamburger}
-        {isMobile && this.state.open && nav}
-      </div>
-    );
-  }
-}
-
-export default Header;
+})(Header);

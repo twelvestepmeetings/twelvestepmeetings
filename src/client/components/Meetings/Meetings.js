@@ -1,14 +1,12 @@
+// @flow
 import React, { PropTypes } from 'react';
 import bounds from 'react-bounds';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
-import Header from './../Header';
-import Dropdown from './../Dropdown';
-import Meeting from './../Meeting';
-import { TabOption } from './TabOption';
 import style from 'lib/style';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
+import Header from './../Header';
 
 const TUE = 'TUE', WED = 'WED', THUR = 'THUR', FRI = 'FRI', SAT = 'SAT', SUN = 'SUN';
 const days = [ TUE, WED, THUR, FRI, SAT, SUN];

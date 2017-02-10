@@ -1,8 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
 
-/**
- * Meeting
- */
+/* =============================================================================
+=    Meeting
+============================================================================= */
 const MeetingSchema = new Schema({
   participants: {
     'type': [Schema.Types.ObjectId],
@@ -22,6 +22,9 @@ const MeetingSchema = new Schema({
 });
 const Meeting = mongoose.model('Meeting', MeetingSchema);
 
+/* =============================================================================
+=    User
+============================================================================= */
 const UserSchema = new Schema({
   name: String
 });
